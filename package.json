@@ -1,0 +1,20 @@
+{
+  "name": "cdn",
+  "version": "1.0.0",
+  "description": "A CDN with REST API for manipulating files",
+  "main": "server.js",
+  "dependencies": {
+    "fastify": "^3.2.0",
+    "fastify-file-upload": "^3.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "url": "https://github.com/ilinaraducristian/MOEA-Web-Framework-CDN",
+    "type": "git"
+  },
+  "author": "Radu Ilina",
+  "license": "MIT"
+}
