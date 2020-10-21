@@ -1,6 +1,6 @@
 # Supported tags and respective `Dockerfile` links
 
--	[`latest`, `1.0.0`](https://github.com/ilinaraducristian/MOEA-Web-Framework-CDN/blob/master/Dockerfile)
+- [`latest`, `1.1.0`, `1.0.0`](https://github.com/ilinaraducristian/MOEA-Web-Framework-CDN/blob/master/Dockerfile)
 
 # What is CDN?
 
