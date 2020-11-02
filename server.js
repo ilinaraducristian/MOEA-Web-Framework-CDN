@@ -1,58 +1,29 @@
-const fs = require("fs").promises;
 const fastify = require("fastify")();
-const fileUpload = require("fastify-file-upload");
-
-const authentication_issuer_url =
-  process.env.AUTHENTICATION_ISSUER_URL ||
-  "http://localhost:8180/auth/realms/MOEA-Web-Framework";
-const data_path = process.env.DATA_PATH || "/usr/content";
-const secureRoutes = ["^/[A-Fa-f0-9]{64}$"];
+const fp = require("fastify-file-upload");
+const environment = require("./environments/environment");
+// const {
+//   instance,
+//   User,
+//   Algorithm,
+//   Problem,
+//   ReferenceSet,
+// } = require("./sequelize");
 
 const authorization_hook = require("./authorization-hook")(
-  authentication_issuer_url,
-  secureRoutes
+  environment.authentication_issuer_url,
+  environment.secureRoutes
 );
 
+// onRequest hooks
 fastify.addHook("onRequest", authorization_hook);
 
-fastify.register(fileUpload);
-
-fs.mkdir(data_path).catch(() => {});
-
-fastify.post("/", async (req, res) => {
-  const promises = [];
-  req.raw.files.forEach((file) => {
-    promises.push(fs.writeFile(`${data_path}/${file.name}`, file.data));
-  });
-  if (promises.length == 0) {
-    return res.status(400).send("No file provided");
-  }
-  try {
-    await Promise.all(promises);
-    res.send();
-  } catch (error) {
-    res.status(400).send();
-  }
+// preValidation hooks
+fastify.register(fp, {
+  limits: { fileSize: 128 * 1024 * 1024 },
 });
 
-fastify.get("/:filename", async (req, res) => {
-  try {
-    res
-      .status(200)
-      .send(await fs.readFile(`${data_path}/${req.params.filename}`));
-  } catch (error) {
-    res.status(400).send();
-  }
-});
-
-fastify.delete("/:filename", async (req, res) => {
-  try {
-    await fs.unlink(`${data_path}/${req.params.filename}`);
-    res.send();
-  } catch (error) {
-    res.status(400).send();
-  }
-});
+// routes
+fastify.register(require("./routes/problem"));
 
 const start = async () => {
   try {

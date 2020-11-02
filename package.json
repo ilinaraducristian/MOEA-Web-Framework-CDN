@@ -6,7 +6,12 @@
   "dependencies": {
     "fastify": "^3.7.0",
     "fastify-file-upload": "^3.0.0",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.4.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.5",
+    "sequelize-cli": "^6.2.0",
+    "sqlite3": "^5.0.0"
   },
   "devDependencies": {},
   "scripts": {
