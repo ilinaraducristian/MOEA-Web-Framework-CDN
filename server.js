@@ -12,9 +12,7 @@ const authorization_hook = require("./authorization-hook")(
 fastify.addHook("onRequest", authorization_hook);
 
 // preValidation hooks
-fastify.register(fp, {
-  limits: { fileSize: 128 * 1024 * 1024 },
-});
+fastify.register(fp, environment.file_upload_config);
 
 // routes
 fastify.register(createRoute("Problem"));
@@ -23,7 +21,7 @@ fastify.register(createRoute("ReferenceSet"));
 
 const start = async () => {
   try {
-    await fastify.listen(environment.port, "0.0.0.0");
+    await fastify.listen(environment.fastify_config);
     fastify.log.info(`server listening on ${fastify.server.address().port}`);
   } catch (err) {
     fastify.log.error(err);

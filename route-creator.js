@@ -1,6 +1,5 @@
-const fs = require("fs").promises;
 const sequelize = require("./sequelize");
-const environment = require("./environments/environment");
+const minio = require("./minio");
 
 module.exports = function (model) {
   const lowercaseModel = model.toLowerCase();
@@ -87,18 +86,15 @@ module.exports = function (model) {
               md5: file.md5,
             });
 
-            // check if the file exists on the disk
+            // check if the file exists in minio
             try {
-              await fs.access(`${environment.data_path}/${file.md5}`);
+              await minio.getFile(file.md5);
             } catch (e) {
-              if (e.code !== "ENOENT") {
-                return res.status(500).send();
+              if (e.message !== "The specified key does not exist.") {
+                throw e;
               }
-              // after creating the db entry, store it on the disk if it's not already there
-              await fs.writeFile(
-                `${environment.data_path}/${file.md5}`,
-                file.data
-              );
+              // after creating the db entry, store it in minio if it's not already there
+              await minio.addFile(file.md5, file.data);
             }
           }
 
@@ -152,7 +148,11 @@ module.exports = function (model) {
       return res.status(404).send();
     }
 
-    res.send(await fs.readFile(`${environment.data_path}/${md5}`));
+    try {
+      res.send(await minio.getFile(md5));
+    } catch (e) {
+      res.status(500).send();
+    }
   }
 
   async function deleteModelHandler(req, res) {
