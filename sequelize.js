@@ -1,6 +1,7 @@
 const { DataTypes, Sequelize, Model } = require("sequelize");
 
 const sequelize = new Sequelize("sqlite::memory:", {
+  logging: false,
   define: {
     freezeTableName: true,
   },
@@ -24,14 +25,14 @@ const CommonStructure = {
 // Models
 
 class User extends Model {
-  static findByKeycloakIdAndProblemMD5(keycloakId, md5) {
+  static findByKeycloakIdAndModelMD5(model, keycloakId, md5) {
     return User.findOne({
       where: {
         keycloakId,
       },
       include: [
         {
-          model: Problem,
+          model,
           where: {
             md5,
           },

@@ -1,13 +1,7 @@
 const fastify = require("fastify")();
 const fp = require("fastify-file-upload");
 const environment = require("./environments/environment");
-// const {
-//   instance,
-//   User,
-//   Algorithm,
-//   Problem,
-//   ReferenceSet,
-// } = require("./sequelize");
+const createRoute = require("./route-creator");
 
 const authorization_hook = require("./authorization-hook")(
   environment.authentication_issuer_url,
@@ -23,11 +17,13 @@ fastify.register(fp, {
 });
 
 // routes
-fastify.register(require("./routes/problem"));
+fastify.register(createRoute("Problem"));
+fastify.register(createRoute("Algorithm"));
+fastify.register(createRoute("ReferenceSet"));
 
 const start = async () => {
   try {
-    await fastify.listen(8080, "0.0.0.0");
+    await fastify.listen(environment.port, "0.0.0.0");
     fastify.log.info(`server listening on ${fastify.server.address().port}`);
   } catch (err) {
     fastify.log.error(err);
