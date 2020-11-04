@@ -16,4 +16,5 @@ module.exports = environment = {
     accessKey: process.env.MINIO_ACCESS_KEY,
     secretKey: process.env.MINIO_SECRET_KEY,
   },
+  postgresql_url: process.env.POSTGRESQL_URL,
 };

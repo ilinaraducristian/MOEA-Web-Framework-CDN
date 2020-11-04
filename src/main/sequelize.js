@@ -1,11 +1,17 @@
 const { DataTypes, Sequelize, Model } = require("sequelize");
+const environment = require("./environments/environment");
 
-const sequelize = new Sequelize("sqlite::memory:", {
-  logging: false,
-  define: {
-    freezeTableName: true,
-  },
-}); // Example for sqlite
+let sequelize;
+
+if (environment.production) {
+  sequelize = new Sequelize(environment.postgresql_url);
+} else {
+  sequelize = new Sequelize("sqlite::memory:", {
+    define: {
+      freezeTableName: true,
+    },
+  });
+}
 
 /**
  * Common structure for Algorithm, Problem and ReferenceSet
@@ -72,17 +78,20 @@ Problem.belongsToMany(User, { through: "problem_user" });
 Algorithm.belongsToMany(User, { through: "algorithm_user" });
 ReferenceSet.belongsToMany(User, { through: "reference_set_user" });
 
-sequelize
+const isConnected = sequelize
   .authenticate()
   .then(() => {
     console.log("Connection has been established successfully.");
+    return Promise.resolve(true);
   })
   .catch((error) => {
     console.error("Unable to connect to the database:", error);
+    return Promise.resolve(false);
   });
 
 module.exports = {
   instance: sequelize,
+  isConnected,
   User,
   Algorithm,
   Problem,

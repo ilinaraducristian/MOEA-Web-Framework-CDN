@@ -5,43 +5,10 @@ module.exports = function (model) {
   const lowercaseModel = model.toLowerCase();
 
   function plugin(fastify, opts, next) {
-    fastify.post(`/${lowercaseModel}`, addModelHandlerTest);
-    fastify.get(`/${lowercaseModel}/:md5`, getModelHandlerTest);
-    fastify.delete(`/${lowercaseModel}/:md5`, deleteModelHandlerTest);
+    fastify.post(`/${lowercaseModel}`, addModelHandler);
+    fastify.get(`/${lowercaseModel}/:md5`, getModelHandler);
+    fastify.delete(`/${lowercaseModel}/:md5`, deleteModelHandler);
     next();
-  }
-
-  let firstTime = true;
-
-  async function addModelHandlerTest(req, res) {
-    if (firstTime) {
-      await sequelize.instance.sync();
-      await sequelize.User.create({ keycloakId: "id1" });
-      firstTime = false;
-    }
-    req.jwt = { sub: "id1" };
-    await addModelHandler(req, res);
-  }
-
-  async function getModelHandlerTest(req, res) {
-    if (firstTime) {
-      await sequelize.instance.sync();
-      await sequelize.User.create({ keycloakId: "id1" });
-      firstTime = false;
-    }
-    req.jwt = { sub: "id1" };
-
-    await getModelHandler(req, res);
-  }
-
-  async function deleteModelHandlerTest(req, res) {
-    if (firstTime) {
-      await sequelize.instance.sync();
-      await sequelize.User.create({ keycloakId: "id1" });
-      firstTime = false;
-    }
-    req.jwt = { sub: "id1" };
-    await deleteModelHandler(req, res);
   }
 
   async function addModelHandler(req, res) {

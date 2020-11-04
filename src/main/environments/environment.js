@@ -2,10 +2,7 @@ module.exports = {
   production: false,
   authentication_issuer_url:
     "http://localhost:8180/auth/realms/MOEA-Web-Framework",
-  secureRoutes: [
-    /*"^/[A-Fa-f0-9]{64}$"*/
-    /*".+"*/
-  ],
+  secureRoutes: [".+"],
   file_upload_config: {
     limits: { fileSize: 128 * 1024 * 1024 },
   },
@@ -20,4 +17,5 @@ module.exports = {
     accessKey: "minioadmin",
     secretKey: "minioadmin",
   },
+  postgresql_url: "",
 };
