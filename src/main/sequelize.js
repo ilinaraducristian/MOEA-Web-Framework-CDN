@@ -1,5 +1,5 @@
 const { DataTypes, Sequelize, Model } = require("sequelize");
-const environment = require("./environments/environment");
+const environment = require("./environments/environment")();
 
 let sequelize;
 

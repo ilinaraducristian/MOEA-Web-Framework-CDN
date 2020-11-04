@@ -1,6 +1,6 @@
 const fastify = require("fastify")();
 const fp = require("fastify-file-upload");
-const environment = require("./environments/environment");
+const environment = require("./environments/environment")();
 const createRoute = require("./route-creator");
 
 const authorization_hook = require("./authorization-hook")(

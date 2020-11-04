@@ -1,5 +1,5 @@
 const Minio = require("minio");
-const environment = require("./environments/environment");
+const environment = require("./environments/environment")();
 
 const minioClient = new Minio.Client(environment.minio_config);
 

@@ -1,6 +1,6 @@
 {
   "name": "cdn",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A CDN with REST API for manipulating files",
   "main": "server.js",
   "dependencies": {
