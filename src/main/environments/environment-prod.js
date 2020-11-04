@@ -6,12 +6,12 @@ module.exports = environment = {
     limits: { fileSize: 128 * 1024 * 1024 },
   },
   fastify_config: {
-    port: process.env.PORT,
+    port: parseInt(process.env.PORT),
     host: process.env.HOST,
   },
   minio_config: {
     endPoint: process.env.MINIO_ENDPOINT,
-    port: process.env.MINIO_PORT,
+    port: parseInt(process.env.MINIO_PORT),
     useSSL: true,
     accessKey: process.env.MINIO_ACCESS_KEY,
     secretKey: process.env.MINIO_SECRET_KEY,
