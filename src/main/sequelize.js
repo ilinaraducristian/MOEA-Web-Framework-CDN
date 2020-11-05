@@ -4,7 +4,11 @@ const environment = require("./environments/environment")();
 let sequelize;
 
 if (environment.production) {
-  sequelize = new Sequelize(environment.postgresql_url);
+  sequelize = new Sequelize(environment.postgresql_url, {
+    define: {
+      freezeTableName: true,
+    },
+  });
 } else {
   sequelize = new Sequelize("sqlite::memory:", {
     define: {
@@ -13,9 +17,7 @@ if (environment.production) {
   });
 }
 
-/**
- * Common structure for Algorithm, Problem and ReferenceSet
- */
+// Common structure for Algorithm, Problem and ReferenceSet
 const CommonStructure = {
   name: {
     type: DataTypes.STRING,
@@ -29,7 +31,6 @@ const CommonStructure = {
 };
 
 // Models
-
 class User extends Model {
   static findByKeycloakIdAndModelMD5(model, keycloakId, md5) {
     return User.findOne({
@@ -50,23 +51,31 @@ class User extends Model {
 
 User.init(
   {
-    keycloakId: {
-      type: DataTypes.STRING,
+    id: {
+      type: DataTypes.STRING(36),
       allowNull: false,
       unique: true,
+      primaryKey: true,
     },
   },
   {
     sequelize,
-    modelName: "users",
+    modelName: "user_entity",
+    timestamps: false,
   }
 );
 
-const Algorithm = sequelize.define("algorithms", CommonStructure);
+const Algorithm = sequelize.define("algorithms", CommonStructure, {
+  timestamps: false,
+});
 
-const Problem = sequelize.define("problems", CommonStructure);
+const Problem = sequelize.define("problems", CommonStructure, {
+  timestamps: false,
+});
 
-const ReferenceSet = sequelize.define("reference_sets", CommonStructure);
+const ReferenceSet = sequelize.define("reference_sets", CommonStructure, {
+  timestamps: false,
+});
 
 // Associations
 
