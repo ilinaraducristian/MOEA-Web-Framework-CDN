@@ -5,6 +5,7 @@ let sequelize;
 
 if (environment.production) {
   sequelize = new Sequelize(environment.postgresql_url, {
+    logging: false,
     define: {
       freezeTableName: true,
     },
@@ -35,7 +36,7 @@ class User extends Model {
   static findByKeycloakIdAndModelMD5(model, keycloakId, md5) {
     return User.findOne({
       where: {
-        keycloakId,
+        id: keycloakId,
       },
       include: [
         {

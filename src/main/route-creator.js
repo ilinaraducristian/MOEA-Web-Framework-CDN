@@ -32,7 +32,9 @@ module.exports = function (model) {
           );
 
           // get the user again
-          const user = await sequelize.User.findOne({ where: { keycloakId } });
+          const user = await sequelize.User.findOne({
+            where: { id: keycloakId },
+          });
 
           // if the user already has the model then return
           if (userWithModel !== null) {
