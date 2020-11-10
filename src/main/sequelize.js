@@ -31,6 +31,11 @@ const CommonStructure = {
   },
 };
 
+const CommonOptions = {
+  underscored: true,
+  timestamps: false,
+};
+
 // Models
 class User extends Model {
   static findByKeycloakIdAndModelMD5(model, keycloakId, md5) {
@@ -62,41 +67,49 @@ User.init(
   {
     sequelize,
     modelName: "user_entity",
+    underscored: true,
     timestamps: false,
   }
 );
 
-const Algorithm = sequelize.define("algorithms", CommonStructure, {
-  timestamps: false,
-});
+const Algorithm = sequelize.define(
+  "algorithms",
+  CommonStructure,
+  CommonOptions
+);
 
-const Problem = sequelize.define("problems", CommonStructure, {
-  timestamps: false,
-});
+const Problem = sequelize.define("problems", CommonStructure, CommonOptions);
 
-const ReferenceSet = sequelize.define("reference_sets", CommonStructure, {
-  timestamps: false,
-});
+const ReferenceSet = sequelize.define(
+  "reference_sets",
+  CommonStructure,
+  CommonOptions
+);
 
 // Associations
 
-User.belongsToMany(Problem, { through: "problem_user" });
-User.belongsToMany(Algorithm, { through: "algorithm_user" });
-User.belongsToMany(ReferenceSet, { through: "reference_set_user" });
+User.belongsToMany(Problem, { through: "problem_user", timestamps: false });
+User.belongsToMany(Algorithm, { through: "algorithm_user", timestamps: false });
+User.belongsToMany(ReferenceSet, {
+  through: "reference_set_user",
+  timestamps: false,
+});
 
 Problem.belongsToMany(User, { through: "problem_user" });
 Algorithm.belongsToMany(User, { through: "algorithm_user" });
 ReferenceSet.belongsToMany(User, { through: "reference_set_user" });
 
-const isConnected = sequelize
+let isConnected = false;
+sequelize
   .authenticate()
   .then(() => {
     console.log("Connection has been established successfully.");
-    return Promise.resolve(true);
+    isConnected = true;
+    return sequelize.sync();
   })
   .catch((error) => {
     console.error("Unable to connect to the database:", error);
-    return Promise.resolve(false);
+    isConnected = false;
   });
 
 module.exports = {
